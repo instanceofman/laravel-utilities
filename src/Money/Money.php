@@ -10,6 +10,11 @@ class Money extends ValueObject
     const VALUE_SCALE = 8;
 
     /**
+    * @var BC
+    */
+    private static $bc = null;
+
+    /**
      * @param $value
      * @return Money
      */
@@ -27,7 +32,7 @@ class Money extends ValueObject
         Assert::greaterThanEq($value, 0);
 
         $format = '%0.9f';
-        $value = bcmul(sprintf($format, $value), 1, self::VALUE_SCALE);
+        $value = $this->math()->bcadd(sprintf($format, $value), 1, self::VALUE_SCALE);
         $this->value = $value;
     }
 
@@ -45,7 +50,7 @@ class Money extends ValueObject
         Assert::lessThanEq($scale, self::VALUE_SCALE);
 
         $format = '%0.9f';
-        return bcmul(
+        return $this->math()->bcmul(
             sprintf($format, $this->value), 1, $scale
         );
     }
@@ -57,13 +62,13 @@ class Money extends ValueObject
     public function equals($value)
     {
         $value = $this->castOperationValue($value);
-        return bccomp($this->value, $value, self::VALUE_SCALE) === 0;
+        return $this->math()->bccomp($this->value, $value, self::VALUE_SCALE) === 0;
     }
 
     public function lessThan($value)
     {
         $value = $this->castOperationValue($value);
-        return bccomp($this->value, $value, self::VALUE_SCALE) < 0;
+        return $this->math()->bccomp($this->value, $value, self::VALUE_SCALE) < 0;
     }
 
     public function lessThanOrEqual($value)
@@ -75,7 +80,7 @@ class Money extends ValueObject
     public function greaterThan($value)
     {
         $value = $this->castOperationValue($value);
-        return bccomp($this->value, $value, self::VALUE_SCALE) > 0;
+        return $this->math()->bccomp($this->value, $value, self::VALUE_SCALE) > 0;
     }
 
     public function greaterThanOrEqual($value)
@@ -99,7 +104,7 @@ class Money extends ValueObject
     public function add($value)
     {
         $value = $this->castOperationValue($value);
-        $this->value = bcadd($this->value, $value, self::VALUE_SCALE);
+        $this->value = $this->math()->bcadd($this->value, $value, self::VALUE_SCALE);
         return $this;
     }
 
@@ -110,7 +115,7 @@ class Money extends ValueObject
     public function sub($value)
     {
         $value = $this->castOperationValue($value);
-        $this->value = bcsub($this->value, $value, self::VALUE_SCALE);
+        $this->value = $this->math()->bcsub($this->value, $value, self::VALUE_SCALE);
         return $this;
     }
 
@@ -121,7 +126,7 @@ class Money extends ValueObject
     public function mul($value)
     {
         $value = $this->castOperationValue($value);
-        $this->value = bcmul($this->value, $value, self::VALUE_SCALE);
+        $this->value = $this->math()->bcmul($this->value, $value, self::VALUE_SCALE);
         return $this;
     }
 
@@ -132,7 +137,7 @@ class Money extends ValueObject
     public function div($value)
     {
         $value = $this->castOperationValue($value);
-        $this->value = bcdiv($this->value, $value, self::VALUE_SCALE);
+        $this->value = $this->math()->bcdiv($this->value, $value, self::VALUE_SCALE);
         return $this;
     }
 
@@ -143,7 +148,19 @@ class Money extends ValueObject
         } else {
             Assert::numeric($value);
             $format = '%0.9f';
-            return bcmul(sprintf($format, $value), 1, self::VALUE_SCALE);
+            return $this->math()->bcmul(sprintf($format, $value), 1, self::VALUE_SCALE);
         }
+    }
+
+    /**
+    * @return BC
+    */
+    protected function math()
+    {
+        if (is_null(self::$bc)) {
+            self::$bc = new BC;
+        }
+
+        return self::$bc;
     }
 }
