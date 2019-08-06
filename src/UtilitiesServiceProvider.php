@@ -2,7 +2,9 @@
 
 namespace Isofman\LaravelUtilities;
 
-class UtilitiesServiceProvider
-{
+use Illuminate\Support\ServiceProvider;
 
+class UtilitiesServiceProvider extends ServiceProvider
+{
+    public function register() {}
 }
