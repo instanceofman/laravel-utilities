@@ -6,5 +6,4 @@ use Illuminate\Support\ServiceProvider;
 
 class UtilitiesServiceProvider extends ServiceProvider
 {
-    public function register() {}
 }

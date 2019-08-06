@@ -136,32 +136,6 @@ class Money extends ValueObject
         return $this;
     }
 
-    /**
-     * @param $value
-     * @return Money
-     */
-    public static function fromGwei($value)
-    {
-        $money = new static();
-        $money->setValue(
-            bcdiv($value, '1000000000', self::VALUE_SCALE)
-        );
-        return $money;
-    }
-
-    /**
-     * @param $value
-     * @return Money
-     */
-    public static function fromSatoshis($value)
-    {
-        $money = new static();
-        $money->setValue(
-            bcdiv($value, '100000000', self::VALUE_SCALE)
-        );
-        return $money;
-    }
-
     protected function castOperationValue($value)
     {
         if($value instanceof Money) {
