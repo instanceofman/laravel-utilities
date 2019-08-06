@@ -7,7 +7,7 @@ use \Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 class Builder extends EloquentBuilder
 {
-    protected function firstSafe($columns = ['*'])
+    public function firstSafe($columns = ['*'])
     {
         $item = $this->first($columns);
 
