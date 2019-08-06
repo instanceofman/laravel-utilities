@@ -1,0 +1,33 @@
+{
+  "name": "isofman/laravel-utilities",
+  "description": "Basic utilities for every project",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Alex Pham",
+      "email": "instanceofman@gmail.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=5.6.4",
+    "ext-bcmath": "*",
+    "ext-json": "*",
+    "ext-curl": "*",
+    "ext-openssl": "*",
+    "webmozart/assert": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Isofman\\LaravelUtilities\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Isofman\\LaravelUtilities\\UtilitiesServiceProvider"
+      ]
+    }
+  }
+}
