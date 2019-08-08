@@ -7,20 +7,20 @@ namespace Isofman\LaravelUtilities\Money;
 /**
  * Class BC
  * @package Isofman\LaravelUtilities\Money
- * @method string bcadd($left_operand, $right_operand, $scale = 0)
- * @method string bccomp($left_operand, $right_operand, $scale = 0)
- * @method string bcdiv($dividend, $divisor, $scale = 0)
- * @method string bcmod($dividend, $divisor, $scale = 0)
- * @method string bcmul($base, $exponent, $scale = 0)
- * @method string bcpow($base, $exponent, $scale = 0)
- * @method string bcpowmod($base, $exponent, $modulus, $scale = 0)
- * @method string bcscale($scale)
- * @method string bcsqrt($operand, $scale = null)
- * @method string bcsub($left_operand, $right_operand, $scale = 0)
+ * @method string add($left_operand, $right_operand, $scale = 0)
+ * @method string comp($left_operand, $right_operand, $scale = 0)
+ * @method string div($dividend, $divisor, $scale = 0)
+ * @method string mod($dividend, $divisor, $scale = 0)
+ * @method string mul($base, $exponent, $scale = 0)
+ * @method string pow($base, $exponent, $scale = 0)
+ * @method string powmod($base, $exponent, $modulus, $scale = 0)
+ * @method string scale($scale)
+ * @method string sqrt($operand, $scale = null)
+ * @method string sub($left_operand, $right_operand, $scale = 0)
  */
 class BC
 {
-    const METHODS = ['bcadd', 'bccomp', 'bcdiv', 'bcmod', 'bcmul', 'bcpow', 'bcpowmod', 'bcscale', 'bcsqrt', 'bcsub'];
+    const METHODS = ['add', 'comp', 'div', 'mod', 'mul', 'pow', 'powmod', 'scale', 'sqrt', 'sub'];
 
     /**
      * @param $name
@@ -32,6 +32,8 @@ class BC
         if (!in_array($name, self::METHODS)) {
             throw new \InvalidArgumentException('Invalid method');
         }
+
+        $name = 'bc'.$name;
 
         return call_user_func_array($name, $arguments);
     }
