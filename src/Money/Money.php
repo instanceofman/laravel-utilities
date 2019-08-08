@@ -42,7 +42,7 @@ class Money extends ValueObject
      */
     public function getValue($scale = null): string
     {
-        if (!is_null($scale)) {
+        if (is_null($scale)) {
             $scale = self::VALUE_SCALE;
         }
 
