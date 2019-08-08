@@ -32,7 +32,7 @@ class Money extends ValueObject
         Assert::greaterThanEq($value, 0);
 
         $format = '%0.9f';
-        $value = $this->math()->bcadd(sprintf($format, $value), 1, self::VALUE_SCALE);
+        $value = $this->math()->bcmul(sprintf($format, $value), 1, self::VALUE_SCALE);
         $this->value = $value;
     }
 
