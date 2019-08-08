@@ -25,14 +25,11 @@ class Money extends ValueObject
 
     public function setValue($value)
     {
-        if($value instanceof Money) {
-            $value = $value->getValue();
-        }
+        $value = $this->castOperationValue($value);
+
         Assert::numeric($value);
         Assert::greaterThanEq($value, 0);
 
-        $format = '%0.9f';
-        $value = $this->math()->mul(sprintf($format, $value), 1, self::VALUE_SCALE);
         $this->value = $value;
     }
 
@@ -40,12 +37,8 @@ class Money extends ValueObject
      * @param mixed $scale
      * @return string
      */
-    public function getValue($scale = null): string
+    public function getValue($scale = self::VALUE_SCALE): string
     {
-        if (is_null($scale)) {
-            $scale = self::VALUE_SCALE;
-        }
-
         Assert::numeric($scale);
         Assert::lessThanEq($scale, self::VALUE_SCALE);
 
@@ -53,6 +46,11 @@ class Money extends ValueObject
         return $this->math()->mul(
             sprintf($format, $this->value), 1, $scale
         );
+    }
+
+    public function getSourceValue()
+    {
+        return $this->value;
     }
 
     /**
@@ -104,7 +102,7 @@ class Money extends ValueObject
     public function add($value)
     {
         $value = $this->castOperationValue($value);
-        $this->value = $this->math()->add($this->value, $value, self::VALUE_SCALE);
+        $this->value = $this->math()->add($this->value, $value, self::VALUE_SCALE + 1);
         return $this;
     }
 
@@ -115,7 +113,7 @@ class Money extends ValueObject
     public function sub($value)
     {
         $value = $this->castOperationValue($value);
-        $this->value = $this->math()->sub($this->value, $value, self::VALUE_SCALE);
+        $this->value = $this->math()->sub($this->value, $value, self::VALUE_SCALE + 1);
         return $this;
     }
 
@@ -126,7 +124,7 @@ class Money extends ValueObject
     public function mul($value)
     {
         $value = $this->castOperationValue($value);
-        $this->value = $this->math()->mul($this->value, $value, self::VALUE_SCALE);
+        $this->value = $this->math()->mul($this->value, $value, self::VALUE_SCALE + 1);
         return $this;
     }
 
@@ -137,18 +135,18 @@ class Money extends ValueObject
     public function div($value)
     {
         $value = $this->castOperationValue($value);
-        $this->value = $this->math()->div($this->value, $value, self::VALUE_SCALE);
+        $this->value = $this->math()->div($this->value, $value, self::VALUE_SCALE + 1);
         return $this;
     }
 
     protected function castOperationValue($value)
     {
         if($value instanceof Money) {
-            return $value->getValue();
+            return $value->getSourceValue();
         } else {
             Assert::numeric($value);
             $format = '%0.9f';
-            return $this->math()->mul(sprintf($format, $value), 1, self::VALUE_SCALE);
+            return $this->math()->mul(sprintf($format, $value), 1, (self::VALUE_SCALE + 1));
         }
     }
 
