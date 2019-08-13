@@ -4,6 +4,9 @@
 namespace Isofman\LaravelUtilities;
 
 
+use Closure;
+use InvalidArgumentException;
+
 class ValueObject implements \JsonSerializable
 {
     protected $value;
@@ -78,9 +81,22 @@ class ValueObject implements \JsonSerializable
         return $this->getValue();
     }
 
+    protected function executeFormatter($processor, $value)
+    {
+        if (is_string($processor)) {
+            return $processor($value);
+        } else if ($processor instanceof Closure) {
+            return $processor($value);
+        } else if (is_callable($processor)) {
+            return is_array($processor) ? call_user_func($processor, $value) : $processor($value);
+        } else {
+            throw new InvalidArgumentException();
+        }
+    }
+
     public function resolve($template, $formatter = null)
     {
-        $value = is_null($formatter) ? $this->getValue() : call_user_func($formatter, $this->getValue());
+        $value = is_null($formatter) ? $this->getValue() : $this->executeFormatter($formatter, $this->getValue());
         return sprintf($template, $value);
     }
 }
