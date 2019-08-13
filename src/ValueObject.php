@@ -77,4 +77,10 @@ class ValueObject implements \JsonSerializable
     {
         return $this->getValue();
     }
+
+    public function resolve($template, $formatter = null)
+    {
+        $value = is_null($formatter) ? $this->getValue() : call_user_func($formatter, $this->getValue());
+        return sprintf($template, $value);
+    }
 }
