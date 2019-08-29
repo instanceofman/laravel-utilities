@@ -24,49 +24,67 @@ class Model extends Eloquent
     }
 
     /**
-     * @param $processor
+     * @param mixed $handle
      */
-    protected function processCatcher($processor) {
-        if($processor instanceof Exception) {
-            throw $processor;
-        } else if (is_string($processor)) {
-            $processor($this);
-        } else if ($processor instanceof Closure) {
-            $processor($this);
-        } else if (is_callable($processor)) {
-            is_array($processor) ? call_user_func($processor, $this) : $processor($this);
+    protected function process($handle) {
+        if($handle instanceof Exception) {
+            throw $handle;
+        } else if (is_string($handle)) {
+            $handle($this);
+        } else if ($handle instanceof Closure) {
+            $handle($this);
+        } else if (is_callable($handle)) {
+            is_array($handle) ? call_user_func($handle, $this) : $handle($this);
         } else {
             throw new InvalidArgumentException();
         }
     }
 
     /**
-     * @param $processor
-     * @return $this
+     * @param mixed $handle
+     * @return Model
      */
-    public function catch($processor)
+    public function catch($handle)
     {
         if(! $this instanceof NullModel) {
             return $this;
         }
 
-        $this->processCatcher($processor);
+        $this->process($handle);
 
         return $this;
     }
 
     /**
-     * @param $processor
+     * @param mixed $handle
      * @return Model
      */
-    public function then($processor)
+    public function then($handle)
     {
         if($this instanceof NullModel) {
             return $this;
         }
 
-        $this->processCatcher($processor);
+        $this->process($handle);
 
         return $this;
+    }
+
+    /**
+     * @param mixed $handle
+     * @return Model
+     */
+    public function known($handle)
+    {
+        return $this->then($handle);
+    }
+
+    /**
+     * @param mixed $handle
+     * @return Model
+     */
+    public function unknown($handle)
+    {
+        return $this->catch($handle);
     }
 }
