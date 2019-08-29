@@ -25,7 +25,6 @@ class Model extends Eloquent
 
     /**
      * @param $processor
-     * @throws Exception
      */
     protected function processCatcher($processor) {
         if($processor instanceof Exception) {
@@ -44,7 +43,6 @@ class Model extends Eloquent
     /**
      * @param $processor
      * @return $this
-     * @throws Exception
      */
     public function catch($processor)
     {
@@ -60,7 +58,6 @@ class Model extends Eloquent
     /**
      * @param $processor
      * @return Model
-     * @throws Exception
      */
     public function then($processor)
     {
