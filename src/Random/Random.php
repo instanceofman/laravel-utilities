@@ -3,31 +3,44 @@
 namespace Isofman\LaravelUtilities\Random;
 
 
+use Closure;
+use InvalidArgumentException;
+
 class Random
 {
-    public function tap($value, \Closure $formatter = null)
+    public function format($value, $formatter = null)
     {
-        if ($formatter) {
+        if (is_string($formatter)) {
             return $formatter($value);
+        } else if ($formatter instanceof Closure) {
+            return $formatter($value);
+        } else if (is_callable($formatter)) {
+            return is_array($formatter) ? call_user_func($formatter, $value) : $formatter($value);
+        } else {
+            throw new InvalidArgumentException();
         }
-
-        return $value;
     }
 
-    public function string($length, \Closure $formatter = null): string
+    public function string($length, $formatter = null): string
     {
-        return $this->tap((new RandomHandler())->generate($length), $formatter);
+        return $this->format(
+            (new RandomHandler())->generate($length),
+            $formatter
+        );
     }
 
-    public function numbers($length, \Closure $formatter = null): string
+    public function numbers($length, $formatter = null): string
     {
-        return $this->tap((new RandomHandler('123456789'))->generate($length), $formatter);
+        return $this->format(
+            (new RandomHandler('123456789'))->generate($length),
+            $formatter
+        );
     }
 
-    public function numbersWithZero($length, \Closure $formatter = null)
+    public function numbersWithZero($length, $formatter = null)
     {
         $str = (new RandomHandler('0123456789'))->generate($length-1);
         $str = rand(1, 9) . $str;
-        return $this->tap($str, $formatter);
+        return $this->format($str, $formatter);
     }
 }

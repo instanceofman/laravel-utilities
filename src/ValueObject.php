@@ -71,6 +71,11 @@ class ValueObject implements \JsonSerializable
         return clone $this;
     }
 
+    public function use()
+    {
+        return $this->clone();
+    }
+
     public function __toString()
     {
         return strval($this->getValue());
