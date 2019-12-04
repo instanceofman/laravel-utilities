@@ -31,4 +31,12 @@ class FriendlyException extends CoreRuntimeException
     {
         return $this->silent;
     }
+
+    public function toArray()
+    {
+        return [
+            'int_code' => $this->getCode(),
+            'message' => $this->getMessage()
+        ];
+    }
 }
