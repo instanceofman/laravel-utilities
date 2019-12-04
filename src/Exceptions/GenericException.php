@@ -10,7 +10,7 @@ use Throwable;
  * Class GenericException
  * @package Isofman\LaravelUtilities\Exceptions
  */
-class GenericException extends RuntimeException
+class GenericException extends FriendlyException
 {
     /**
      * GenericException constructor.
@@ -29,7 +29,7 @@ class GenericException extends RuntimeException
      * @param Throwable|null $previous
      * @return static
      */
-    public static function new($message = "", $code = 0, Throwable $previous = null)
+    public static function raise($message = "", $code = 0, Throwable $previous = null)
     {
         return new static($message, $code, $previous);
     }
