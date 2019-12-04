@@ -25,20 +25,11 @@ class GenericException extends RuntimeException
 
     /**
      * @param string $message
-     * @return static
-     */
-    public static function short($message = "")
-    {
-        return new static($message);
-    }
-
-    /**
-     * @param string $message
      * @param int $code
      * @param Throwable|null $previous
      * @return static
      */
-    public static function long($message = "", $code = 0, Throwable $previous = null)
+    public static function new($message = "", $code = 0, Throwable $previous = null)
     {
         return new static($message, $code, $previous);
     }

@@ -9,7 +9,7 @@ use Throwable;
  * Class SpecificException
  * @package Isofman\LaravelUtilities\Exceptions
  */
-class SpecificException extends RuntimeException
+abstract class SpecificException extends RuntimeException
 {
     /**
      * @var
@@ -31,25 +31,19 @@ class SpecificException extends RuntimeException
     }
 
     /**
-     * @param $code
-     * @param string $message
-     * @return $this
+     * @return mixed
      */
-    public function short($code, $message = "")
-    {
-        return new static($code, $message);
-    }
+    protected abstract static function getPredefinedStringCode();
 
     /**
-     * @param $code
      * @param string $message
      * @param Throwable|null $previous
      * @param int $intCode
-     * @return $this
+     * @return static
      */
-    public function long($code, $message = "", Throwable $previous = null, $intCode = 0)
+    public static function new($message = "", Throwable $previous = null, $intCode = 0)
     {
-        return new static($code, $message, $previous, $intCode);
+        return new static(static::getPredefinedStringCode(), $message, $previous, $intCode);
     }
 
     /**
